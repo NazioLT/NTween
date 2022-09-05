@@ -13,7 +13,7 @@ namespace Nazio_LT.NTween
             return _transform.EXEMoveTo(_start, _end, _duration);
         }
 
-        public static NTweener EXEMoveTo(this Transform _transform, Vector3 _start, Vector3 _end, float _duration) => new NTweener((_t) => _transform.position = Vector3.Lerp(_start, _end, _t), _duration);
+        public static NTweener EXEMoveTo(this Transform _transform, Vector3 _start, Vector3 _end, float _duration) => new NTweener((_t) => _transform.position = Vector3.LerpUnclamped(_start, _end, _t), _duration, false);
 
         public static NTweener EXEMove(this Transform _transform, Vector3 _delta, float _duration)
         {
@@ -27,7 +27,7 @@ namespace Nazio_LT.NTween
         {
             Quaternion _start = _transform.rotation;
 
-            return new NTweener((_t) => _transform.rotation = Quaternion.Slerp(_start, _end, _t), _duration);
+            return new NTweener((_t) => _transform.rotation = Quaternion.SlerpUnclamped(_start, _end, _t), _duration, false);
         }
 
         public static NTweener EXERotate(this Transform _transform, Quaternion _delta, float _duration)

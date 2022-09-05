@@ -1,18 +1,21 @@
 using UnityEngine;
 using System;
-using System.Threading.Tasks;
+using System.Collections;
+using Nazio_LT.NTween.Internal;
 
 namespace Nazio_LT.NTween
 {
     public class NTweener
     {
-        public NTweener(Action<float> _action, float _duration)
+        public NTweener(Action<float> _action, float _duration, bool _startTween)
         {
             mainCallback = _action;
             duration = _duration;
 
-            StartTween();
+            if (_startTween) StartTween();
         }
+
+        private Func<bool> tweenMethod;
 
         private Action<float> mainCallback;
         private Action onCompleteCallback;
@@ -21,60 +24,61 @@ namespace Nazio_LT.NTween
 
         //Behaviour informations
         private bool pingpong = false;
+        private bool loop = false;
         private float duration = 0;
 
         private bool stopped = false;
         private bool paused = false;
 
-        private async void StartTween()
+        //Running Infos
+        private float tweenTime = 0;
+
+        private bool MainTween(bool _reverse, float _tweenTime)
         {
-            await MainTween(false);
+            if (paused) return false;
 
-            while (pingpong)
+            if (_tweenTime > 1f) _tweenTime = 1f;
+            float _t = _reverse ? 1 - _tweenTime : _tweenTime;
+            float _convertedTime = timeConversionMethod(_t);
+
+            mainCallback(_convertedTime);
+
+            return _tweenTime >= 1;
+        }
+
+        private bool MainTween(bool _reverse) => MainTween(_reverse, tweenTime);
+
+
+        private bool MainTweenPingPong()
+        {
+            if (tweenTime <= 1)
             {
-                if (stopped) return;
+                MainTween(false);
+                return false;
+            }
 
-                await MainTween(true);
-                await MainTween(false);
+            float _t = tweenTime - 1;
+            return MainTween(true, _t);
+        }
+
+        public void Update(float _deltaTime)
+        {
+            tweenTime += _deltaTime / duration;
+
+            if (tweenMethod()) CompleteTween();
+        }
+
+        private void CompleteTween()
+        {
+            if (loop)
+            {
+                tweenTime = 0f;
+                return;
             }
 
             if (onCompleteCallback != null) onCompleteCallback();
-        }
 
-        private async Task MainTween(bool _reverse)
-        {
-            float _endTime = Time.time + duration;
-            while (Time.time < _endTime)
-            {
-                await Task.Yield();
-
-                float _normalizedTime = NormalizedTime(_reverse, duration, _endTime);
-
-                if (stopped) return;
-                if (Paused(ref _endTime, duration, _normalizedTime)) continue;
-
-                float _t = timeConversionMethod(_normalizedTime);
-                mainCallback(_t);
-            }
-        }
-
-        private float NormalizedTime(bool _reverse, float _duration, float _endTime)
-        {
-            float _deltaTime = (_endTime - Time.time);
-            float _normalizedTime = _deltaTime / duration;
-
-            if (_reverse) return _normalizedTime;
-            return 1 - _normalizedTime;
-        }
-
-        private bool Paused(ref float _endTime, float _duration, float _normalizedTime)
-        {
-            if (!paused) return false;
-
-            float _remainingDuration = (1 - _normalizedTime) * duration;
-            _endTime = Time.time + _remainingDuration;
-
-            return true;
+            NTweenerUpdater.instance.UnRegisterTweener(this);
         }
 
         #region Orders
@@ -86,6 +90,31 @@ namespace Nazio_LT.NTween
         public void SetPause(bool _value) => paused = _value;
         public void InversePause() => paused = !paused;
 
+        public void StartTween()
+        {
+            tweenTime = 0f;
+            tweenMethod = pingpong ? () => MainTweenPingPong() : () => MainTween(false);
+
+            NTweenerUpdater.instance.RegisterTweener(this);
+
+            // /// <summary>
+            // /// 
+            // /// </summary>
+            // /// <returns>If finished</returns>
+            // Func<bool> _tweenMethod = pingpong ? () => MainTweenPingPong() : () => MainTween(false);
+
+            // await _tweenMethod();
+
+            // while (loop)
+            // {
+            //     if (stopped) return;
+
+            //     await _tweenMethod();
+            // }
+
+            // if (onCompleteCallback != null) onCompleteCallback();
+        }
+
         #endregion
 
         #region Settings
@@ -93,6 +122,12 @@ namespace Nazio_LT.NTween
         public NTweener PingPong()
         {
             pingpong = true;
+            return this;
+        }
+
+        public NTweener Loop()
+        {
+            loop = true;
             return this;
         }
 
