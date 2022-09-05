@@ -14,12 +14,14 @@ namespace Nazio_LT.NTween
             StartTween();
         }
 
-        private float duration = 0;
         private Action<float> mainCallback;
         private Action onCompleteCallback;
 
+        private Func<float, float> timeConversionMethod = (_t) => _t;
+
         //Behaviour informations
         private bool pingpong = false;
+        private float duration = 0;
 
         private bool stopped = false;
         private bool paused = false;
@@ -51,7 +53,8 @@ namespace Nazio_LT.NTween
                 if (stopped) return;
                 if (Paused(ref _endTime, duration, _normalizedTime)) continue;
 
-                mainCallback(_normalizedTime);
+                float _t = timeConversionMethod(_normalizedTime);
+                mainCallback(_t);
             }
         }
 
@@ -96,6 +99,18 @@ namespace Nazio_LT.NTween
         public NTweener OnComplete(Action _callback)
         {
             onCompleteCallback = _callback;
+            return this;
+        }
+
+        public NTweener AddTimeCurve(AnimationCurve _curve)
+        {
+            timeConversionMethod = (_t) => _curve.Evaluate(_t);
+            return this;
+        }
+
+        public NTweener AddTimeConversionMethod(Func<float, float> _callback)
+        {
+            timeConversionMethod = _callback;
             return this;
         }
 
