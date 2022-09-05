@@ -1,0 +1,15 @@
+{
+    "name": "com.nazio_lt.ntween",
+    "version": "1.0.0",
+    "displayName": "NTween",
+    "description": "Nazio_LT's tweening package.",
+    "unity": "2021.3",
+    "author": 
+    {
+        "name": "Henno Théo",
+        "email": "theo.henno21@gmail.com",
+        "url": "https://twitter.com/HennoTheo"
+    },
+    "dependencies": {},
+    "keywords": ["tool", "tweening"]
+}
