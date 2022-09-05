@@ -7,12 +7,10 @@ namespace Nazio_LT.NTween
 {
     public class NTweener
     {
-        public NTweener(Action<float> _action, float _duration, bool _startTween)
+        public NTweener(Action<float> _action, float _duration)
         {
             mainCallback = _action;
             duration = _duration;
-
-            if (_startTween) StartTween();
         }
 
         private Func<bool> tweenMethod;
@@ -27,7 +25,6 @@ namespace Nazio_LT.NTween
         private bool loop = false;
         private float duration = 0;
 
-        private bool stopped = false;
         private bool paused = false;
 
         //Running Infos
@@ -76,14 +73,16 @@ namespace Nazio_LT.NTween
                 return;
             }
 
-            if (onCompleteCallback != null) onCompleteCallback();
-
-            NTweenerUpdater.instance.UnRegisterTweener(this);
+            Stop(true);
         }
 
         #region Orders
 
-        public void Stop() => stopped = true;
+        public void Stop(bool _callCompleteCallback)
+        {
+            if (_callCompleteCallback && onCompleteCallback != null) onCompleteCallback();
+            NTweenerUpdater.instance.UnRegisterTweener(this);
+        }
 
         public void Pause() => paused = true;
         public void Resume() => paused = false;
@@ -96,23 +95,6 @@ namespace Nazio_LT.NTween
             tweenMethod = pingpong ? () => MainTweenPingPong() : () => MainTween(false);
 
             NTweenerUpdater.instance.RegisterTweener(this);
-
-            // /// <summary>
-            // /// 
-            // /// </summary>
-            // /// <returns>If finished</returns>
-            // Func<bool> _tweenMethod = pingpong ? () => MainTweenPingPong() : () => MainTween(false);
-
-            // await _tweenMethod();
-
-            // while (loop)
-            // {
-            //     if (stopped) return;
-
-            //     await _tweenMethod();
-            // }
-
-            // if (onCompleteCallback != null) onCompleteCallback();
         }
 
         #endregion
