@@ -38,6 +38,15 @@ namespace Nazio_LT.NTween
             return _transform.NTRotateTo(_end, _duration);
         }
 
+        public static NTweener NTScaleTo(this Transform _transform, Vector3 _end, float _duration)
+        {
+            Vector3 _start = _transform.localScale;
+
+            return _transform.NTScaleTo(_start, _end, _duration);
+        }
+
+        public static NTweener NTScaleTo(this Transform _transform, Vector3 _start, Vector3 _end, float _duration) => new NTweener((_t) => _transform.localScale = Vector3.LerpUnclamped(_start, _end, _t), _duration);
+
         #endregion
 
         #region Color Tweening
