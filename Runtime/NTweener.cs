@@ -8,15 +8,17 @@ namespace Nazio_LT.NTween
     {
         public NTweener(Action<float> _action, float _duration)
         {
-            action = _action;
+            mainCallback = _action;
             duration = _duration;
 
             StartTween();
         }
 
         private float duration = 0;
-        private Action<float> action;
+        private Action<float> mainCallback;
+        private Action onCompleteCallback;
 
+        //Behaviour informations
         private bool pingpong = false;
 
         private bool stopped = false;
@@ -33,6 +35,8 @@ namespace Nazio_LT.NTween
                 await MainTween(true);
                 await MainTween(false);
             }
+
+            if (onCompleteCallback != null) onCompleteCallback();
         }
 
         private async Task MainTween(bool _reverse)
@@ -47,7 +51,7 @@ namespace Nazio_LT.NTween
                 if (stopped) return;
                 if (Paused(ref _endTime, duration, _normalizedTime)) continue;
 
-                action(_normalizedTime);
+                mainCallback(_normalizedTime);
             }
         }
 
@@ -86,6 +90,12 @@ namespace Nazio_LT.NTween
         public NTweener PingPong()
         {
             pingpong = true;
+            return this;
+        }
+
+        public NTweener OnComplete(Action _callback)
+        {
+            onCompleteCallback = _callback;
             return this;
         }
 
