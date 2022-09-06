@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using System.Collections;
 using Nazio_LT.NTween.Internal;
 
 namespace Nazio_LT.NTween

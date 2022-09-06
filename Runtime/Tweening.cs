@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Nazio_LT.Core;
 
 namespace Nazio_LT.NTween
 {
@@ -59,32 +60,25 @@ namespace Nazio_LT.NTween
 
         #region Color Tweening
 
-        public static NTweener NTColorTo(this SpriteRenderer _sprite, Color _end, float _duration)
-        {
-            Color _start = _sprite.color;
-
-            return _sprite.NTColorTo(_end, _duration);
-        }
-
+        public static NTweener NTColorTo(this SpriteRenderer _sprite, Color _end, float _duration) => _sprite.NTColorTo(_sprite.color, _end, _duration);
         public static NTweener NTColorTo(this SpriteRenderer _sprite, Color _start, Color _end, float _duration) => new NTweener((_t) => _sprite.color = Color.LerpUnclamped(_start, _end, _t), _duration);
 
-        public static NTweener NTColorTo(this Material _mat, Color _end, float _duration)
-        {
-            Color _start = _mat.color;
 
-            return _mat.NTColorTo(_end, _duration);
-        }
-
+        public static NTweener NTColorTo(this Material _mat, Color _end, float _duration) => _mat.NTColorTo(_mat.color, _end, _duration);
         public static NTweener NTColorTo(this Material _mat, Color _start, Color _end, float _duration) => new NTweener((_t) => _mat.color = Color.LerpUnclamped(_start, _end, _t), _duration);
 
-        public static NTweener NTColorTo(this Image _img, Color _end, float _duration)
-        {
-            Color _start = _img.color;
 
-            return _img.NTColorTo(_end, _duration);
-        }
-
+        public static NTweener NTColorTo(this Image _img, Color _end, float _duration) => _img.NTColorTo(_img.color, _end, _duration);
         public static NTweener NTColorTo(this Image _img, Color _start, Color _end, float _duration) => new NTweener((_t) => _img.color = Color.LerpUnclamped(_start, _end, _t), _duration);
+
+        public static NTweener NTAlphaTo(this SpriteRenderer _sprite, float _end, float _duration) => _sprite.NTAlphaTo(_sprite.color.a, _end, _duration);
+        public static NTweener NTAlphaTo(this SpriteRenderer _sprite, float _start, float _end, float _duration) => new NTweener((_t) => _sprite.color = NMath.SetAlpha(_sprite.color, Mathf.LerpUnclamped(_start, _end, _t)), _duration);
+
+        public static NTweener NTAlphaTo(this Material _mat, float _end, float _duration) => _mat.NTAlphaTo(_mat.color.a, _end, _duration);
+        public static NTweener NTAlphaTo(this Material _mat, float _start, float _end, float _duration) => new NTweener((_t) => _mat.color = NMath.SetAlpha(_mat.color, Mathf.LerpUnclamped(_start, _end, _t)), _duration);
+
+        public static NTweener NTAlphaTo(this Image _img, float _end, float _duration) => _img.NTAlphaTo(_img.color.a, _end, _duration);
+        public static NTweener NTAlphaTo(this Image _img, float _start, float _end, float _duration) => new NTweener((_t) => _img.color = NMath.SetAlpha(_img.color, Mathf.LerpUnclamped(_start, _end, _t)), _duration);
 
         #endregion
 
