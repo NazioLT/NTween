@@ -14,6 +14,14 @@ namespace Nazio_LT.NTween
             return _transform.NTMoveTo(_start, _end, _duration);
         }
 
+        /// <summary>
+        /// Will tween the transform position from start to end.
+        /// </summary>
+        /// <param name="_transform"></param>
+        /// <param name="_start"></param>
+        /// <param name="_end"></param>
+        /// <param name="_duration"></param>
+        /// <returns></returns>
         public static NTweener NTMoveTo(this Transform _transform, Vector3 _start, Vector3 _end, float _duration) => new NTweener((_t) => _transform.position = Vector3.LerpUnclamped(_start, _end, _t), _duration);
 
         public static NTweener NTMove(this Transform _transform, Vector3 _delta, float _duration)
@@ -80,6 +88,12 @@ namespace Nazio_LT.NTween
 
         #endregion
 
+        /// <summary>
+        /// Build a tweener with custom method callback.
+        /// </summary>
+        /// <param name="_callback">Callback Method</param>
+        /// <param name="_duration">Duration of the tween</param>
+        /// <returns>Tweener</returns>
         public static NTweener NTBuild(System.Action<float> _callback, float _duration) => new NTweener((_t) => _callback(_t), _duration);
     }
 }
