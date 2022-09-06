@@ -23,11 +23,13 @@ namespace Nazio_LT.Tools.NTween
         private bool pingpong = false;
         private bool loop = false;
         private float duration = 0;
+        private float startWaitingDuration = 0;
 
         private bool paused = false;
 
         //Running Infos
         private float tweenTime = 0;
+        private float startWaitingTime = 0;
 
         private bool MainTween(bool _reverse, float _tweenTime)
         {
@@ -57,8 +59,16 @@ namespace Nazio_LT.Tools.NTween
             return MainTween(true, _t);
         }
 
+        private bool CheckIfValueRemainsLower(ref float _value, float _incrementation, float _max)
+        {
+            _value += _incrementation;
+            return _value <= _max;
+        }
+
         public void Update(float _deltaTime)
         {
+            if(CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return;
+            
             tweenTime += _deltaTime / duration;
 
             if (tweenMethod()) CompleteTween();
@@ -129,6 +139,12 @@ namespace Nazio_LT.Tools.NTween
         public NTweener AddTimeConversionMethod(Func<float, float> _callback)
         {
             timeConversionMethod = _callback;
+            return this;
+        }
+
+        public NTweener WaitBeforeStart(float _value)
+        {
+            startWaitingDuration = _value;
             return this;
         }
 
