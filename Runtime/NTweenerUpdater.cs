@@ -30,10 +30,13 @@ namespace Nazio_LT.Tools.NTween.Internal
 
         private void TryUpdate(ref List<NTweener> _tweenersToUpdate, float _deltaTime)
         {
-            if(_tweenersToUpdate == null || _tweenersToUpdate.Count <= 0) return;
-            foreach (var _tweener in _tweenersToUpdate)
+            if (_tweenersToUpdate == null || _tweenersToUpdate.Count <= 0) return;
+
+            for (int i = 0; i < _tweenersToUpdate.Count; i++)
             {
-                if(_tweener == null) continue;
+                NTweener _tweener = _tweenersToUpdate[i];
+                
+                if (_tweener == null) continue;
                 _tweener.Update(_deltaTime);
             }
         }

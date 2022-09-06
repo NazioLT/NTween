@@ -88,12 +88,14 @@ namespace Nazio_LT.Tools.NTween
         public void SetPause(bool _value) => paused = _value;
         public void InversePause() => paused = !paused;
 
-        public void StartTween()
+        public NTweener StartTween()
         {
             tweenTime = 0f;
             tweenMethod = pingpong ? () => MainTweenPingPong() : () => MainTween(false);
 
             NTweenerUpdater.instance.RegisterTweener(this);
+
+            return this;
         }
 
         #endregion
