@@ -79,5 +79,7 @@ namespace Nazio_LT.NTween
         public static NTweener NTColorTo(this Image _img, Color _start, Color _end, float _duration) => new NTweener((_t) => _img.color = Color.LerpUnclamped(_start, _end, _t), _duration);
 
         #endregion
+
+        public static NTweener NTBuild(System.Action<float> _callback, float _duration) => new NTweener((_t) => _callback(_t), _duration);
     }
 }
