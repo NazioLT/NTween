@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Nazio_LT.Core;
+using Nazio_LT.Tools.Core;
 
-namespace Nazio_LT.NTween.Internal
+namespace Nazio_LT.Tools.NTween.Internal
 {
     public sealed class NTweenerUpdater : Singleton<NTweenerUpdater>
     {

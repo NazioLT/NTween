@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Nazio_LT.Core;
+using Nazio_LT.Tools.Core;
 
-namespace Nazio_LT.NTween
+namespace Nazio_LT.Tools.NTween
 {
     public static partial class Tweening
     {

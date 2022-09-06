@@ -1,8 +1,8 @@
 using UnityEngine;
 using System;
-using Nazio_LT.NTween.Internal;
+using Nazio_LT.Tools.NTween.Internal;
 
-namespace Nazio_LT.NTween
+namespace Nazio_LT.Tools.NTween
 {
     public class NTweener
     {
