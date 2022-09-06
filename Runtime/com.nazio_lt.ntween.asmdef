@@ -1,3 +1,16 @@
 {
-	"name": "com.nazio_lt.ntween"
+    "name": "com.nazio_lt.ntween",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a99df13097c3db843bfa5021ba44cefc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

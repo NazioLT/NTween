@@ -1,14 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Nazio_LT.NTween;
+using Nazio_LT.Core;
 
 namespace Nazio_LT.NTween.Internal
 {
-    public class NTweenerUpdater : MonoBehaviour
+    public sealed class NTweenerUpdater : Singleton<NTweenerUpdater>
     {
-        public static NTweenerUpdater instance { private set; get; }
-
         private List<NTweener> tweenersToUpdate = new List<NTweener>();
 
         [RuntimeInitializeOnLoadMethod]
@@ -23,6 +20,8 @@ namespace Nazio_LT.NTween.Internal
                 DontDestroyOnLoad(instance.gameObject);
             }
         }
+
+        protected override void Awake() { }
 
         private void FixedUpdate()
         {
