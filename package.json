@@ -10,6 +10,8 @@
         "email": "theo.henno21@gmail.com",
         "url": "https://twitter.com/HennoTheo"
     },
-    "dependencies": {},
+    "dependencies": {
+        "com.nazio_lt.ncore": "1.0.0"
+    },
     "keywords": ["tool", "tweening"]
 }
