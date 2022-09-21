@@ -12,4 +12,5 @@
 * Transform scale tweening. ([32267c3](https://github.com/NazioLT/NTween/commit/32267c3e66aace669fde5b230537a643e3acbaae))
 * Custom callback tweening. ([3d5543e](https://github.com/NazioLT/NTween/commit/3d5543e3c161d68d7e0b3036afcd2df232a33ca5))
 * Color alpha tweening. ([abbce5f](https://github.com/NazioLT/NTween/commit/abbce5f85f83d1ce1e94ef54dac802148ed87005))
-* Adding waiting time before starting. 
+* Adding waiting time before starting. ([66f69ae](https://github.com/NazioLT/NTween/commit/66f69ae72f12e0d1fe47ef3cc3cdc7b0eefead22))
+* Adding Spline timed animation. ([]())
