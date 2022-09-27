@@ -92,9 +92,9 @@ namespace Nazio_LT.Tools.NTween
 
         #region Spline Tweening
 
-        public static NTweener NTFollowCurveDuration(this Transform _transform, NCurve _curve, float _animationTime) => new NTweener((_t) => _transform.position = _curve.ComputePoint(_t), _animationTime);
+        public static NTweener NTFollowCurveDuration(this Transform _transform, NCurve _curve, float _animationTime) => new NTweener((_t) => _transform.position = _curve.ComputePoint(_t, true), _animationTime);
 
-        public static NTweener NTFollowCurveDurationUniform(this Transform _transform, NCurve _curve, float _animationTime) => new NTweener((_t) => _transform.position = _curve.ComputePointUniform(_t), _animationTime);//=> new NTweener((_t) => _transform.position = _curve.ComputePointDistance(_t * _curve.curveLength), _animationTime);
+        public static NTweener NTFollowCurveDurationUniform(this Transform _transform, NCurve _curve, float _animationTime) => new NTweener((_t) => _transform.position = _curve.ComputePointUniform(_t, true), _animationTime);//=> new NTweener((_t) => _transform.position = _curve.ComputePointDistance(_t * _curve.curveLength), _animationTime);
 
         #endregion
     }
