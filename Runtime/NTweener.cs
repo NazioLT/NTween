@@ -26,6 +26,7 @@ namespace Nazio_LT.Tools.NTween
         private float startWaitingDuration = 0;
 
         private bool paused = false;
+        public bool unscaledTime { private set; get; }
 
         //Running Infos
         private float tweenTime = 0;
@@ -67,11 +68,18 @@ namespace Nazio_LT.Tools.NTween
 
         public void Update(float _deltaTime)
         {
-            if(CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return;
-            
+            if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return;
+
             tweenTime += _deltaTime / duration;
 
-            if (tweenMethod()) CompleteTween();
+            try
+            {
+                if (tweenMethod()) CompleteTween();
+            }
+            catch
+            {
+                Stop(false);
+            }
         }
 
         private void CompleteTween()
@@ -121,6 +129,12 @@ namespace Nazio_LT.Tools.NTween
         public NTweener Loop()
         {
             loop = true;
+            return this;
+        }
+
+        public NTweener UnscaledTime()
+        {
+            unscaledTime = true;
             return this;
         }
 

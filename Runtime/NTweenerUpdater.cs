@@ -23,20 +23,27 @@ namespace Nazio_LT.Tools.NTween.Internal
 
         protected override void Awake() { }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            TryUpdate(ref tweenersToUpdate, Time.fixedDeltaTime);
+            TryUpdate(ref tweenersToUpdate, Time.unscaledDeltaTime);
         }
 
-        private void TryUpdate(ref List<NTweener> _tweenersToUpdate, float _deltaTime)
+        private void TryUpdate(ref List<NTweener> _tweenersToUpdate, float _unscaledDeltaTime)
         {
             if (_tweenersToUpdate == null || _tweenersToUpdate.Count <= 0) return;
 
             for (int i = 0; i < _tweenersToUpdate.Count; i++)
             {
                 NTweener _tweener = _tweenersToUpdate[i];
-                
-                if (_tweener == null) continue;
+
+                if (_tweener == null)
+                {
+                    _tweenersToUpdate.RemoveAt(i);
+                    continue;
+                }
+
+                float _deltaTime = _unscaledDeltaTime * (_tweener.unscaledTime ? 1f : Time.timeScale);
+
                 _tweener.Update(_deltaTime);
             }
         }
