@@ -4,7 +4,7 @@ using Nazio_LT.Tools.Core;
 
 namespace Nazio_LT.Tools.NTween
 {
-    public static partial class Tweening
+    public static partial class NTweening
     {
         #region Moving Tweening
 
