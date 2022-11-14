@@ -80,6 +80,9 @@ namespace Nazio_LT.Tools.NTween
         /// <summary>Build a tweener with custom method callback.</summary>
         public static NTweener NTBuild(System.Action<float> _callback, float _duration) => new NTweener((_t) => _callback(_t), _duration);
 
+        /// <summary>Build a waiting tweener.</summary>
+        public static NTweener NTWait(System.Action _callback, float _duration) => new NTweener((_t) => { }, _duration).OnComplete(_callback);
+
         #region Spline Tweening
 
         public static NTweener NTFollowCurveDuration(this Transform _transform, NCurve _curve, float _animationTime) => new NTweener((_t) => _transform.position = _curve.ComputePoint(_t, true), _animationTime);
