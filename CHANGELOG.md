@@ -1,4 +1,13 @@
-## [1.0.0](https://github.com/NazioLT/NTween) (2022-10-11)
+## [1.1.0](https://github.com/NazioLT/NTween) (2022-10-11)
+
+
+### New Features :
+
+* On start method. ([]())
+
+
+
+## [1.0.0](https://github.com/NazioLT/NTween/releases/tag/1.0.0) (2022-10-11)
 
 
 ### New Features :

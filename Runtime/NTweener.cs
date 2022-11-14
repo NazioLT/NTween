@@ -15,7 +15,7 @@ namespace Nazio_LT.Tools.NTween
         private Func<bool> tweenMethod;
 
         private Action<float> mainCallback;
-        private Action onCompleteCallback;
+        private Action onCompleteCallback, onStartCallBack;
 
         private Func<float, float> timeConversionMethod = (_t) => _t;
 
@@ -95,23 +95,34 @@ namespace Nazio_LT.Tools.NTween
 
         #region Orders
 
+        /// <summary>Stop tweening.</summary>
         public void Stop(bool _callCompleteCallback)
         {
             if (_callCompleteCallback && onCompleteCallback != null) onCompleteCallback();
             NTweenerUpdater.instance.UnRegisterTweener(this);
         }
 
+        /// <summary>Pause tweening.</summary>
         public void Pause() => paused = true;
+
+        /// <summary>Resume tweening.</summary>
         public void Resume() => paused = false;
+
+        /// <summary>Set tweening pause to.</summary>
         public void SetPause(bool _value) => paused = _value;
+
+        /// <summary>Inverse tweening pause value (True if false for exemple).</summary>
         public void InversePause() => paused = !paused;
 
+        /// <summary>Start tweening.</summary>
         public NTweener StartTween()
         {
             tweenTime = 0f;
             tweenMethod = pingpong ? () => MainTweenPingPong() : () => MainTween(false);
 
             NTweenerUpdater.instance.RegisterTweener(this);
+
+            if (onStartCallBack != null) onStartCallBack();
 
             return this;
         }
@@ -159,6 +170,12 @@ namespace Nazio_LT.Tools.NTween
         public NTweener WaitBeforeStart(float _value)
         {
             startWaitingDuration = _value;
+            return this;
+        }
+
+        public NTweener OnStart(Action _callback)
+        {
+            onStartCallBack = _callback;
             return this;
         }
 
