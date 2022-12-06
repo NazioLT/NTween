@@ -1,9 +1,50 @@
 using UnityEngine;
 using System;
 using Nazio_LT.Tools.NTween.Internal;
+using System.Collections.Generic;
 
 namespace Nazio_LT.Tools.NTween
 {
+    public class NTweenerSquencer
+    {
+        private List<NTweener> instructions = new List<NTweener>();
+        private int currentInstruction;
+
+        public NTweenerSquencer Add(NTweener _tweener)
+        {
+            instructions.Add(_tweener);
+            return this;
+        }
+
+        public void Start()
+        {
+            currentInstruction = 0;
+            PlayCurrentTweener();
+        }
+
+        private void PlayCurrentTweener()
+        {
+            Action _currentOnComplete = CurrentInstruction.onCompleteCallback;
+
+            CurrentInstruction.OnComplete(() =>
+            {
+                _currentOnComplete();
+                PlayNextTweener();
+            }).StartTween();
+        }
+
+        private void PlayNextTweener()
+        {
+            currentInstruction++;
+
+            if(currentInstruction >= instructions.Count) return;
+
+            PlayCurrentTweener();
+        }
+
+        private NTweener CurrentInstruction => instructions[currentInstruction];
+    }
+
     public class NTweener
     {
         public NTweener(Action<float> _action, float _duration)
@@ -14,8 +55,9 @@ namespace Nazio_LT.Tools.NTween
 
         private Func<bool> tweenMethod;
 
-        private Action<float> mainCallback;
-        private Action onCompleteCallback, onStartCallBack;
+        public Action<float> mainCallback { private set; get; }
+        public Action onCompleteCallback { private set; get; }
+        public Action onStartCallBack { private set; get; }
 
         private Func<float, float> timeConversionMethod = (_t) => _t;
 
