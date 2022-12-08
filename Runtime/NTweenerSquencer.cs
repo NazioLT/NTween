@@ -1,22 +1,20 @@
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Nazio_LT.Tools.NTween.Internal;
 
 namespace Nazio_LT.Tools.NTween
 {
-    public class NTweener : NTweenBase
+    public class NTweenerSquencer : NTweenBase
     {
-        public NTweener(Action<float> _action, float _duration)
-        {
-            mainCallback = _action;
-            duration = _duration;
-        }
-
         private Func<bool> tweenMethod;
 
         public Action<float> mainCallback { private set; get; }
         public Action onCompleteCallback { private set; get; }
         public Action onStartCallBack { private set; get; }
+
+        private int currentTweener;
+        private List<NTweener> tweeners = new List<NTweener>();
 
         private Func<float, float> timeConversionMethod = (_t) => _t;
 
@@ -32,36 +30,6 @@ namespace Nazio_LT.Tools.NTween
         private float tweenTime = 0;
         private float startWaitingTime = 0;
 
-        private NTweenerSquencer sequencer;
-
-        private bool MainTween(bool _reverse, float _tweenTime)
-        {
-            if (paused) return false;
-
-            if (_tweenTime > 1f) _tweenTime = 1f;
-            float _t = _reverse ? 1 - _tweenTime : _tweenTime;
-            float _convertedTime = timeConversionMethod(_t);
-
-            mainCallback(_convertedTime);
-
-            return _tweenTime >= 1;
-        }
-
-        private bool MainTween(bool _reverse) => MainTween(_reverse, tweenTime);
-
-
-        private bool MainTweenPingPong()
-        {
-            if (tweenTime <= 1)
-            {
-                MainTween(false);
-                return false;
-            }
-
-            float _t = tweenTime - 1;
-            return MainTween(true, _t);
-        }
-
         private bool CheckIfValueRemainsLower(ref float _value, float _incrementation, float _max)
         {
             _value += _incrementation;
@@ -70,29 +38,15 @@ namespace Nazio_LT.Tools.NTween
 
         public override void Update(float _deltaTime)
         {
-            if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return;
-
-            tweenTime += _deltaTime / duration;
-
-            try
+            if (currentTweener >= tweeners.Count)
             {
-                if (tweenMethod()) CompleteTween();
-            }
-            catch
-            {
-                Stop(false);
-            }
-        }
+                if (loop) currentTweener = 0;
+                else Stop(true);
 
-        private void CompleteTween()
-        {
-            if (loop)
-            {
-                tweenTime = 0f;
                 return;
             }
 
-            Stop(true);
+            tweeners[currentTweener].Update(_deltaTime);
         }
 
         #region Orders
@@ -102,7 +56,6 @@ namespace Nazio_LT.Tools.NTween
         {
             if (_callCompleteCallback && onCompleteCallback != null) onCompleteCallback();
             NTweenerUpdater.instance.UnRegisterTweener(this);
-            sequencer?.PassTween();
         }
 
         /// <summary>Pause tweening.</summary>
@@ -118,76 +71,83 @@ namespace Nazio_LT.Tools.NTween
         public void InversePause() => paused = !paused;
 
         /// <summary>Start tweening.</summary>
-        public NTweener StartTween()
+        public NTweenerSquencer StartTween()
         {
-            StartSequenceTween();
+            tweenTime = 0f;
+            currentTweener = 0;
 
             NTweenerUpdater.instance.RegisterTweener(this);
+            if (currentTweener <= tweeners.Count) tweeners[currentTweener].StartSequenceTween();
+
+            if (onStartCallBack != null) onStartCallBack();
 
             return this;
         }
 
-        public void StartSequenceTween()
+        public void PassTween()
         {
-            tweenTime = 0f;
-            tweenMethod = pingpong ? () => MainTweenPingPong() : () => MainTween(false);
-
-            if (onStartCallBack != null) onStartCallBack();
+            currentTweener++;
+            if (currentTweener <= tweeners.Count) tweeners[currentTweener].StartSequenceTween();
         }
 
         #endregion
 
         #region Settings
 
-        public NTweener PingPong()
+        public NTweenerSquencer Add(NTweener _tweener)
+        {
+            tweeners.Add(_tweener);
+            _tweener.PutInSequencer(this);
+            return this;
+        }
+
+        public NTweenerSquencer PingPong()
         {
             pingpong = true;
             return this;
         }
 
-        public NTweener Loop()
+        public NTweenerSquencer Loop()
         {
             loop = true;
             return this;
         }
 
-        public NTweener UnscaledTime()
+        public NTweenerSquencer UnscaledTime()
         {
             unscaledTime = true;
             return this;
         }
 
-        public NTweener OnComplete(Action _callback)
+        public NTweenerSquencer OnComplete(Action _callback)
         {
             onCompleteCallback = _callback;
             return this;
         }
 
-        public NTweener AddTimeCurve(AnimationCurve _curve)
+        public NTweenerSquencer AddTimeCurve(AnimationCurve _curve)
         {
             timeConversionMethod = (_t) => _curve.Evaluate(_t);
             return this;
         }
 
-        public NTweener AddTimeConversionMethod(Func<float, float> _callback)
+        public NTweenerSquencer AddTimeConversionMethod(Func<float, float> _callback)
         {
             timeConversionMethod = _callback;
             return this;
         }
 
-        public NTweener WaitBeforeStart(float _value)
+        public NTweenerSquencer WaitBeforeStart(float _value)
         {
             startWaitingDuration = _value;
             return this;
         }
 
-        public NTweener OnStart(Action _callback)
+        public NTweenerSquencer OnStart(Action _callback)
         {
             onStartCallBack = _callback;
             return this;
         }
-
-        public void PutInSequencer(NTweenerSquencer _sequencer) => sequencer = _sequencer;
 
         #endregion
     }

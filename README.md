@@ -10,6 +10,7 @@ NTween is a Unity package created by [Henno Théo](https://github.com/NazioLT) w
 
 * Pre-coded tweening methods
 * Customisable tweeners
+* Sequencer
 
 ## Documentation :
 
