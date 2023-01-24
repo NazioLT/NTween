@@ -32,8 +32,6 @@ namespace Nazio_LT.Tools.NTween
         private float tweenTime = 0;
         private float startWaitingTime = 0;
 
-        private NTweenerSquencer sequencer;
-
         private bool MainTween(bool _reverse, float _tweenTime)
         {
             if (paused) return false;
@@ -102,7 +100,6 @@ namespace Nazio_LT.Tools.NTween
         {
             if (_callCompleteCallback && onCompleteCallback != null) onCompleteCallback();
             NTweenerUpdater.instance.UnRegisterTweener(this);
-            sequencer?.PassTween();
         }
 
         /// <summary>Pause tweening.</summary>
@@ -186,8 +183,6 @@ namespace Nazio_LT.Tools.NTween
             onStartCallBack = _callback;
             return this;
         }
-
-        public void PutInSequencer(NTweenerSquencer _sequencer) => sequencer = _sequencer;
 
         #endregion
     }
