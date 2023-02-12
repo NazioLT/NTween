@@ -1,11 +1,10 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Nazio_LT.Tools.NTween.Internal;
 
 namespace Nazio_LT.Tools.NTween
 {
-    public class NTweenSequence
+    public class NTweenSequence : NTweenBase
     {
         private List<NTweener> tweeners = new List<NTweener>();
         private int currentTweenID = 0;
@@ -20,20 +19,55 @@ namespace Nazio_LT.Tools.NTween
 
         public NTweenSequence StartTween()
         {
-            if(tweeners.Count == 0) return this;
+            if (onStartCallBack != null) onStartCallBack();
+
+            if (tweeners.Count == 0) return this;
 
             currentTweenID = 0;
-            current = tweeners[0].OnComplete(Next).StartTween();
+            LaunchCurrent();
             return this;
         }
 
+        /// <summary>Pass to the next tween, finish if no tweens remains.</summary>
         private void Next()
         {
             currentTweenID++;
-            if(currentTweenID >= tweeners.Count) return;//Finish
+            if (currentTweenID >= tweeners.Count)
+            {
+                Finish();
+                return;//Finish
+            }
 
-            current = tweeners[currentTweenID];
-            current.OnComplete(Next).StartTween();
+            LaunchCurrent();
         }
+
+        private void Finish()
+        {
+            if (callback != null) callback();
+        }
+
+        private void LaunchCurrent() => current = tweeners[currentTweenID].OnComplete(Next).StartTween();
+
+        #region Orders
+
+        public void Pause() => current.Pause();
+        public void Resume() => current.Resume();
+
+        public void Stop(bool _onCompleteCallback) => current.Stop(_onCompleteCallback);
+
+
+        public NTweenSequence OnStart(Action _callback)
+        {
+            onStartCallBack += _callback;
+            return this;
+        }
+
+        public NTweenSequence OnComplete(Action _callback)
+        {
+            callback += _callback;
+            return this;
+        }
+
+        #endregion
     }
 }

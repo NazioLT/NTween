@@ -15,8 +15,6 @@ namespace Nazio_LT.Tools.NTween
         private Func<bool> tweenMethod;
 
         public Action<float> mainCallback { private set; get; }
-        public Action onCompleteCallback { private set; get; }
-        public Action onStartCallBack { private set; get; }
 
         private Func<float, float> timeConversionMethod = (_t) => _t;
 
@@ -67,7 +65,7 @@ namespace Nazio_LT.Tools.NTween
         }
 
         /// <summary>Update the tween, return if finished</summary>
-        public override bool Update(float _deltaTime)
+        public bool Update(float _deltaTime)
         {
             if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return false;
 
@@ -101,7 +99,7 @@ namespace Nazio_LT.Tools.NTween
         /// <summary>Stop tweening.</summary>
         public void Stop(bool _callCompleteCallback)
         {
-            if (_callCompleteCallback && onCompleteCallback != null) onCompleteCallback();
+            if (_callCompleteCallback && callback != null) callback();
             NTweenerUpdater.instance.UnRegisterTweener(this);
         }
 
@@ -159,7 +157,7 @@ namespace Nazio_LT.Tools.NTween
 
         public NTweener OnComplete(Action _callback)
         {
-            onCompleteCallback += _callback;
+            callback += _callback;
             return this;
         }
 
@@ -183,7 +181,7 @@ namespace Nazio_LT.Tools.NTween
 
         public NTweener OnStart(Action _callback)
         {
-            onStartCallBack = _callback;
+            onStartCallBack += _callback;
             return this;
         }
 
