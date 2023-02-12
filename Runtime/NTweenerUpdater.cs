@@ -21,8 +21,6 @@ namespace Nazio_LT.Tools.NTween.Internal
             }
         }
 
-        protected override void Awake() { }
-
         private void Update()
         {
             TryUpdate(ref tweenersToUpdate, Time.unscaledDeltaTime);

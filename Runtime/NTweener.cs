@@ -32,8 +32,6 @@ namespace Nazio_LT.Tools.NTween
         private float tweenTime = 0;
         private float startWaitingTime = 0;
 
-        private NTweenerSquencer sequencer;
-
         private bool MainTween(bool _reverse, float _tweenTime)
         {
             if (paused) return false;
@@ -68,9 +66,10 @@ namespace Nazio_LT.Tools.NTween
             return _value <= _max;
         }
 
-        public override void Update(float _deltaTime)
+        /// <summary>Update the tween, return if finished</summary>
+        public override bool Update(float _deltaTime)
         {
-            if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return;
+            if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return false;
 
             tweenTime += _deltaTime / duration;
 
@@ -82,6 +81,8 @@ namespace Nazio_LT.Tools.NTween
             {
                 Stop(false);
             }
+
+            return true;
         }
 
         private void CompleteTween()
@@ -102,7 +103,6 @@ namespace Nazio_LT.Tools.NTween
         {
             if (_callCompleteCallback && onCompleteCallback != null) onCompleteCallback();
             NTweenerUpdater.instance.UnRegisterTweener(this);
-            sequencer?.PassTween();
         }
 
         /// <summary>Pause tweening.</summary>
@@ -159,7 +159,7 @@ namespace Nazio_LT.Tools.NTween
 
         public NTweener OnComplete(Action _callback)
         {
-            onCompleteCallback = _callback;
+            onCompleteCallback += _callback;
             return this;
         }
 
@@ -186,8 +186,6 @@ namespace Nazio_LT.Tools.NTween
             onStartCallBack = _callback;
             return this;
         }
-
-        public void PutInSequencer(NTweenerSquencer _sequencer) => sequencer = _sequencer;
 
         #endregion
     }

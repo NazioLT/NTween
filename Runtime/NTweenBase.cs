@@ -4,6 +4,6 @@ namespace Nazio_LT.Tools.NTween
     {
         public bool unscaledTime { protected set; get; }
 
-        public abstract void Update(float _deltaTime);
+        public abstract bool Update(float _deltaTime);
     }
 }
