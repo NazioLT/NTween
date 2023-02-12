@@ -204,7 +204,6 @@ namespace Nazio_LT.Tools.NTween
             stopCondition = _condition;
             return this;
         }
-
         #endregion
     }
 }

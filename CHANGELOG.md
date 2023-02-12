@@ -15,6 +15,10 @@
 
 * On start method. ([571c455](https://github.com/NazioLT/NTween/commit/571c455678d144676e71c4e44f6220b0c509457c))
 * Waiting tweening. ([f5ec008](https://github.com/NazioLT/NTween/commit/f5ec008bcd69bea3f4d61cb9d407acfc3f0da4e3s))
+<<<<<<< HEAD
+=======
+
+>>>>>>> 882cc6ec398c4db0706e6a7d2f767378facde4f2
 
 
 ## [1.0.0](https://github.com/NazioLT/NTween/releases/tag/1.0.0) (2022-10-11)
