@@ -185,6 +185,12 @@ namespace Nazio_LT.Tools.NTween
             return this;
         }
 
+        public NTweener Infinite()
+        {
+            duration = float.MaxValue;
+            return this;
+        }
+
         #endregion
     }
 }
