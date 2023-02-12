@@ -10,6 +10,7 @@ namespace Nazio_LT.Tools.NTween
         {
             mainCallback = _action;
             duration = _duration;
+            stopCondition = () => false;
         }
 
         private Func<bool> tweenMethod;
@@ -17,6 +18,7 @@ namespace Nazio_LT.Tools.NTween
         public Action<float> mainCallback { private set; get; }
 
         private Func<float, float> timeConversionMethod = (_t) => _t;
+        private Func<bool> stopCondition;
 
         //Behaviour informations
         private bool pingpong = false;
@@ -67,6 +69,12 @@ namespace Nazio_LT.Tools.NTween
         /// <summary>Update the tween, return if finished</summary>
         public bool Update(float _deltaTime)
         {
+            if(stopCondition())
+            {
+                Stop(true);
+                return true;
+            }
+
             if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return false;
 
             tweenTime += _deltaTime / duration;
@@ -188,6 +196,12 @@ namespace Nazio_LT.Tools.NTween
         public NTweener Infinite()
         {
             duration = float.MaxValue;
+            return this;
+        }
+
+        public NTweener StopCondition(Func<bool> _condition)
+        {
+            stopCondition = _condition;
             return this;
         }
 
