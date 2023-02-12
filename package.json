@@ -1,6 +1,6 @@
 {
     "name": "com.nazio_lt.ntween",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "displayName": "NTween",
     "description": "Nazio_LT's tweening package.",
     "unity": "2021.3",
@@ -11,7 +11,7 @@
         "url": "https://linktr.ee/hennotheo"
     },
     "dependencies": {
-        "com.nazio_lt.ncore": "1.0.0"
+        "com.nazio_lt.ncore": "1.2.2"
     },
     "keywords": ["tool", "tweening"]
 }

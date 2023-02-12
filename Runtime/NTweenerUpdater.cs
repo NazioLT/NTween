@@ -6,7 +6,7 @@ namespace Nazio_LT.Tools.NTween.Internal
 {
     public sealed class NTweenerUpdater : Singleton<NTweenerUpdater>
     {
-        private List<NTweenBase> tweenersToUpdate = new List<NTweenBase>();
+        private List<NTweener> tweenersToUpdate = new List<NTweener>();
 
         [RuntimeInitializeOnLoadMethod]
         private static void Init()
@@ -21,20 +21,18 @@ namespace Nazio_LT.Tools.NTween.Internal
             }
         }
 
-        protected override void Awake() { }
-
         private void Update()
         {
             TryUpdate(ref tweenersToUpdate, Time.unscaledDeltaTime);
         }
 
-        private void TryUpdate(ref List<NTweenBase> _tweenersToUpdate, float _unscaledDeltaTime)
+        private void TryUpdate(ref List<NTweener> _tweenersToUpdate, float _unscaledDeltaTime)
         {
             if (_tweenersToUpdate == null || _tweenersToUpdate.Count <= 0) return;
 
             for (int i = 0; i < _tweenersToUpdate.Count; i++)
             {
-                NTweenBase _tweener = _tweenersToUpdate[i];
+                NTweener _tweener = _tweenersToUpdate[i];
 
                 if (_tweener == null)
                 {
@@ -48,7 +46,7 @@ namespace Nazio_LT.Tools.NTween.Internal
             }
         }
 
-        public void RegisterTweener(NTweenBase _tweener) => tweenersToUpdate.Add(_tweener);
-        public void UnRegisterTweener(NTweenBase _tweener) => tweenersToUpdate.Remove(_tweener);
+        public void RegisterTweener(NTweener _tweener) => tweenersToUpdate.Add(_tweener);
+        public void UnRegisterTweener(NTweener _tweener) => tweenersToUpdate.Remove(_tweener);
     }
 }

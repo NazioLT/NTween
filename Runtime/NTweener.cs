@@ -10,15 +10,15 @@ namespace Nazio_LT.Tools.NTween
         {
             mainCallback = _action;
             duration = _duration;
+            stopCondition = () => false;
         }
 
         private Func<bool> tweenMethod;
 
         public Action<float> mainCallback { private set; get; }
-        public Action onCompleteCallback { private set; get; }
-        public Action onStartCallBack { private set; get; }
 
         private Func<float, float> timeConversionMethod = (_t) => _t;
+        private Func<bool> stopCondition;
 
         //Behaviour informations
         private bool pingpong = false;
@@ -66,9 +66,16 @@ namespace Nazio_LT.Tools.NTween
             return _value <= _max;
         }
 
-        public override void Update(float _deltaTime)
+        /// <summary>Update the tween, return if finished</summary>
+        public bool Update(float _deltaTime)
         {
-            if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return;
+            if(stopCondition())
+            {
+                Stop(true);
+                return true;
+            }
+
+            if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return false;
 
             tweenTime += _deltaTime / duration;
 
@@ -80,6 +87,8 @@ namespace Nazio_LT.Tools.NTween
             {
                 Stop(false);
             }
+
+            return true;
         }
 
         private void CompleteTween()
@@ -98,7 +107,7 @@ namespace Nazio_LT.Tools.NTween
         /// <summary>Stop tweening.</summary>
         public void Stop(bool _callCompleteCallback)
         {
-            if (_callCompleteCallback && onCompleteCallback != null) onCompleteCallback();
+            if (_callCompleteCallback && callback != null) callback();
             NTweenerUpdater.instance.UnRegisterTweener(this);
         }
 
@@ -156,7 +165,7 @@ namespace Nazio_LT.Tools.NTween
 
         public NTweener OnComplete(Action _callback)
         {
-            onCompleteCallback = _callback;
+            callback += _callback;
             return this;
         }
 
@@ -180,10 +189,21 @@ namespace Nazio_LT.Tools.NTween
 
         public NTweener OnStart(Action _callback)
         {
-            onStartCallBack = _callback;
+            onStartCallBack += _callback;
             return this;
         }
 
+        public NTweener Infinite()
+        {
+            duration = float.MaxValue;
+            return this;
+        }
+
+        public NTweener StopCondition(Func<bool> _condition)
+        {
+            stopCondition = _condition;
+            return this;
+        }
         #endregion
     }
 }

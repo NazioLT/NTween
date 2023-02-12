@@ -1,10 +1,10 @@
-# NTween 1.1.0
+# NTween 1.2.0
 
 NTween is a Unity package created by [Henno Théo](https://github.com/NazioLT) wich contains some tweening class and methods for Unity3D.
 
 ## Dependencies : 
 
-* [[NZCore](https://github.com/NazioLT/NZCore)]
+* [[NZCore 1.2.2](https://github.com/NazioLT/NZCore)]
 
 ## Content :
 
@@ -14,7 +14,4 @@ NTween is a Unity package created by [Henno Théo](https://github.com/NazioLT) w
 
 ## Documentation :
 
-Link : https://github.com/NazioLT/Tools-Documentation
-
-
-Obsidian is recommended to read the documentation.
+Soon

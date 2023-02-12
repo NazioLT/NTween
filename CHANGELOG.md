@@ -1,3 +1,13 @@
+## [1.2.0](https://github.com/NazioLT/NTween) (2023-02-12)
+
+### New Features :
+
+* Sequencer. ([839559c](https://github.com/NazioLT/NTween/commit/839559cd9cfaefa8e87c5f7afb91b8e52932970a))
+* Infinite Tweener ([bf58c53](https://github.com/NazioLT/NTween/commit/bf58c53c05754b4ebbefccb97c005397595fd990))
+* Stop Condition ([13693b6](https://github.com/NazioLT/NTween/commit/13693b6d6c3c7d958714b4ae239384601835c9de))
+
+### Minor issues fixed
+
 ## [1.1.0](https://github.com/NazioLT/NTween) (2022-11-14)
 
 
@@ -5,7 +15,10 @@
 
 * On start method. ([571c455](https://github.com/NazioLT/NTween/commit/571c455678d144676e71c4e44f6220b0c509457c))
 * Waiting tweening. ([f5ec008](https://github.com/NazioLT/NTween/commit/f5ec008bcd69bea3f4d61cb9d407acfc3f0da4e3s))
+<<<<<<< HEAD
+=======
 
+>>>>>>> 882cc6ec398c4db0706e6a7d2f767378facde4f2
 
 
 ## [1.0.0](https://github.com/NazioLT/NTween/releases/tag/1.0.0) (2022-10-11)
