@@ -2,14 +2,6 @@ using System;
 
 namespace Nazio_LT.Tools.NTween
 {
-    internal interface ITweenable
-    {
-        internal void Update(float deltaTime);
-
-        bool UnscaledTime { get; }
-        bool Dead { get; }
-    }
-
     public abstract class NTweenBase<T> : ITweenable where T : NTweenBase<T>
     {
         //Tween settings

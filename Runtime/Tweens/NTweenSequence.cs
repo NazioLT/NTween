@@ -2,12 +2,23 @@ using System.Collections.Generic;
 
 namespace Nazio_LT.Tools.NTween
 {
-    public class NTweenSequence : NTweenBase<NTweenSequence>
+    public enum SequenceMode { Sequence = 0, Parallel = 1 }
+
+    public sealed class NTweenSequence : NTweenBase<NTweenSequence>
     {
+        public NTweenSequence(SequenceMode mode = SequenceMode.Sequence)
+        {
+            m_mode = mode;
+        }
+
         private List<NTweener> m_sequence = new();
 
         private ITweenable m_currentTween = null;
+        private ITweenable[] m_Tweens = null;
         private int m_currentTweenID = 0;
+
+        private SequenceMode m_mode;
+
 
         #region Public Commands
 
@@ -22,7 +33,7 @@ namespace Nazio_LT.Tools.NTween
             m_running = false;
             m_dead = true;
 
-            if(endCall) m_onComplete();
+            if (endCall) m_onComplete();
 
             NTweenerUpdater.instance.UnRegisterTweener(this);
 
@@ -47,8 +58,21 @@ namespace Nazio_LT.Tools.NTween
             m_running = true;
             m_dead = false;
 
-            m_currentTweenID = 0;
-            AssignCurrentTween();
+            switch (m_mode)
+            {
+                case SequenceMode.Sequence:
+                    m_currentTweenID = 0;
+                    AssignCurrentTween();
+                    break;
+                case SequenceMode.Parallel:
+                    m_Tweens = new ITweenable[m_sequence.Count];
+                    for (var i = 0; i < m_Tweens.Length; i++)
+                    {
+                        m_Tweens[i] = m_sequence[i];
+                        m_sequence[i].StartTween(false);
+                    }
+                    break;
+            }
 
             NTweenerUpdater.instance.RegisterTweener(this);
 
@@ -61,10 +85,23 @@ namespace Nazio_LT.Tools.NTween
 
         protected override void Update(float deltaTime)
         {
-            if(!m_running) return;
+            if (!m_running) return;
 
-            if(m_dead) Stop();
+            if (m_dead) Stop();
 
+            switch (m_mode)
+            {
+                case SequenceMode.Sequence:
+                    UpdateSequenceMode(deltaTime);
+                    break;
+                case SequenceMode.Parallel:
+                    UpdateParallelMode(deltaTime);
+                    break;
+            }
+        }
+
+        private void UpdateSequenceMode(float deltaTime)
+        {
             if (m_currentTween == null)
             {
                 Next();
@@ -78,6 +115,19 @@ namespace Nazio_LT.Tools.NTween
             }
 
             m_currentTween.Update(deltaTime);
+        }
+
+        private void UpdateParallelMode(float deltaTime)
+        {
+            bool allDead = true;
+            foreach (ITweenable tween in m_Tweens)
+            {
+                if (!tween.Dead) allDead = false;
+
+                tween.Update(deltaTime);
+            }
+
+            if (allDead) Stop(true);
         }
 
         private void Next()

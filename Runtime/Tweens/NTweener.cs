@@ -8,7 +8,7 @@ namespace Nazio_LT.Tools.NTween
     /// The class contains various methods and properties that allow for customization of the tween, such as setting the duration, loop settings, 
     /// and callbacks for when the tween starts or completes.
     /// </summary>
-    public class NTweener : NTweenBase<NTweener>
+    public sealed class NTweener : NTweenBase<NTweener>
     {
         public NTweener(Action<float> call, float duration)
         {
@@ -39,6 +39,8 @@ namespace Nazio_LT.Tools.NTween
         protected override void Update(float deltaTime)
         {
             if (!m_running) return;
+
+            if(m_dead) Stop();
 
             m_updateAction(deltaTime);
         }
