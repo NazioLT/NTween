@@ -1,3 +1,7 @@
+## [2.0.0](https://github.com/NazioLT/NTween) (2023-02-12)
+
+### Total Code Refacto
+
 ## [1.2.0](https://github.com/NazioLT/NTween) (2023-02-12)
 
 ### New Features :

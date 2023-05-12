@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Nazio_LT.Tools.Core;
 
-namespace Nazio_LT.Tools.NTween.Internal
+namespace Nazio_LT.Tools.NTween
 {
     public sealed class NTweenerUpdater : Singleton<NTweenerUpdater>
     {
-        private List<NTweener> tweenersToUpdate = new List<NTweener>();
+        private List<NTweener> m_tweenersToUpdate = new List<NTweener>();
 
         [RuntimeInitializeOnLoadMethod]
         private static void Init()
@@ -23,30 +23,30 @@ namespace Nazio_LT.Tools.NTween.Internal
 
         private void Update()
         {
-            TryUpdate(ref tweenersToUpdate, Time.unscaledDeltaTime);
+            TryUpdate(ref m_tweenersToUpdate, Time.unscaledDeltaTime);
         }
 
-        private void TryUpdate(ref List<NTweener> _tweenersToUpdate, float _unscaledDeltaTime)
+        private void TryUpdate(ref List<NTweener> tweenersToUpdate, float unscaledDeltaTime)
         {
-            if (_tweenersToUpdate == null || _tweenersToUpdate.Count <= 0) return;
+            if (tweenersToUpdate == null || tweenersToUpdate.Count <= 0) return;
 
-            for (int i = 0; i < _tweenersToUpdate.Count; i++)
+            for (int i = 0; i < tweenersToUpdate.Count; i++)
             {
-                NTweener _tweener = _tweenersToUpdate[i];
+                NTweener tweener = tweenersToUpdate[i];
 
-                if (_tweener == null)
+                if (tweener == null || tweener.Dead)
                 {
-                    _tweenersToUpdate.RemoveAt(i);
+                    tweenersToUpdate.RemoveAt(i);
                     continue;
                 }
 
-                float _deltaTime = _unscaledDeltaTime * (_tweener.unscaledTime ? 1f : Time.timeScale);
+                float deltaTime = unscaledDeltaTime * (tweener.UnscaledTime ? 1f : Time.timeScale);
 
-                _tweener.Update(_deltaTime);
+                tweener.Update(deltaTime);
             }
         }
 
-        public void RegisterTweener(NTweener _tweener) => tweenersToUpdate.Add(_tweener);
-        public void UnRegisterTweener(NTweener _tweener) => tweenersToUpdate.Remove(_tweener);
+        public void RegisterTweener(NTweener tweener) => m_tweenersToUpdate.Add(tweener);
+        public void UnRegisterTweener(NTweener tweener) => m_tweenersToUpdate.Remove(tweener);
     }
 }

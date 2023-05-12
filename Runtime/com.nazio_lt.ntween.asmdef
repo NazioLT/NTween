@@ -1,6 +1,6 @@
 {
     "name": "com.nazio_lt.ntween",
-    "rootNamespace": "",
+    "rootNamespace": "Nazio_LT.Tools.NTween",
     "references": [
         "GUID:a99df13097c3db843bfa5021ba44cefc"
     ],

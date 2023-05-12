@@ -1,209 +1,251 @@
-using UnityEngine;
 using System;
-using Nazio_LT.Tools.NTween.Internal;
+using UnityEngine;
 
 namespace Nazio_LT.Tools.NTween
 {
-    public class NTweener : NTweenBase
+    /// <summary>
+    /// This class is used to create and manage tweens, which are animations that interpolate between two values over a specified duration. 
+    /// The class contains various methods and properties that allow for customization of the tween, such as setting the duration, loop settings, 
+    /// and callbacks for when the tween starts or completes.
+    /// </summary>
+    public class NTweener
     {
-        public NTweener(Action<float> _action, float _duration)
+        public NTweener(Action<float> call, float duration)
         {
-            mainCallback = _action;
-            duration = _duration;
-            stopCondition = () => false;
+            m_call = call;
+            m_duration = duration;
+
+            m_remapFunc = PingRemap;
+            m_updateAction = TweenPreUpdate;
         }
 
-        private Func<bool> tweenMethod;
+        //Tween settings
+        private bool m_unscaledTime = false;
+        private bool m_loop = false;
+        private bool m_pingpong = false;
+        private float m_waitingTimeBeforeStart = 0f;
+        private Action m_onStart = () => { };
+        private Action m_onComplete = () => { };
+        private Func<float, float> m_timeConversion = (t) => t;
 
-        public Action<float> mainCallback { private set; get; }
+        //Tween main parameters
+        private float m_time = 0f;
+        private float m_tValue = 0f;
+        private bool m_dead = false;
+        private bool m_running = false;
 
-        private Func<float, float> timeConversionMethod = (_t) => _t;
-        private Func<bool> stopCondition;
+        private bool m_isPing = true;
+        private Func<float, float> m_remapFunc = null;
+        private Action<float> m_updateAction = null;
 
-        //Behaviour informations
-        private bool pingpong = false;
-        private bool loop = false;
-        private float duration = 0;
-        private float startWaitingDuration = 0;
+        private readonly Action<float> m_call = null;
+        private readonly float m_duration = 0f;
 
-        private bool paused = false;
-
-        //Running Infos
-        private float tweenTime = 0;
-        private float startWaitingTime = 0;
-
-        private bool MainTween(bool _reverse, float _tweenTime)
+        internal void Update(float deltaTime)
         {
-            if (paused) return false;
+            if (!m_running) return;
 
-            if (_tweenTime > 1f) _tweenTime = 1f;
-            float _t = _reverse ? 1 - _tweenTime : _tweenTime;
-            float _convertedTime = timeConversionMethod(_t);
-
-            mainCallback(_convertedTime);
-
-            return _tweenTime >= 1;
+            m_updateAction(deltaTime);
         }
 
-        private bool MainTween(bool _reverse) => MainTween(_reverse, tweenTime);
+        #region Public Commands
 
-
-        private bool MainTweenPingPong()
+        /// <summary>
+        /// This function starts a tween animation.
+        /// </summary>
+        public NTweener StartTween()
         {
-            if (tweenTime <= 1)
+            if (m_running)
             {
-                MainTween(false);
-                return false;
+                NTweenerCore.Error($"Tween is already running.");
+                return this;
             }
 
-            float _t = tweenTime - 1;
-            return MainTween(true, _t);
+            NTweenerUpdater.instance.RegisterTweener(this);
+            m_dead = false;
+            m_running = true;
+
+            m_updateAction = TweenPreUpdate;
+
+            m_onStart();
+
+            return this;
         }
 
-        private bool CheckIfValueRemainsLower(ref float _value, float _incrementation, float _max)
+        /// <summary>
+        /// This function stops the NTweener animation and optionally calls the OnComplete function.
+        /// </summary>
+        /// <param name="endCall">The endCall parameter is a boolean value that determines whether or
+        /// not to call the OnComplete event when stopping the NTweener..</param>
+        public NTweener Stop(bool endCall = false)
         {
-            _value += _incrementation;
-            return _value <= _max;
-        }
-
-        /// <summary>Update the tween, return if finished</summary>
-        public bool Update(float _deltaTime)
-        {
-            if(stopCondition())
+            if (m_dead)
             {
-                Stop(true);
-                return true;
+                NTweenerCore.Error($"Tween is already stopped.");
+                return this;
             }
 
-            if (CheckIfValueRemainsLower(ref startWaitingTime, _deltaTime, startWaitingDuration)) return false;
+            NTweenerUpdater.instance.UnRegisterTweener(this);
+            m_dead = true;
+            m_running = false;
 
-            tweenTime += _deltaTime / duration;
+            if (endCall)
+            {
+                m_call(m_isPing ? 1 : 0);
+                m_onComplete();
+            }
 
+            return this;
+        }
+
+        public NTweener Pause(bool value)
+        {
+            m_running = !value;
+
+            return this;
+        }
+
+        public NTweener PingPong(bool value = true)
+        {
+            m_pingpong = value;
+
+            return this;
+        }
+
+        public NTweener Loop(bool value = true)
+        {
+            m_loop = value;
+
+            return this;
+        }
+
+        public NTweener OnComplete(System.Action call)
+        {
+            m_onComplete = call;
+
+            return this;
+        }
+
+        public NTweener OnStart(System.Action call)
+        {
+            m_onStart = call;
+
+            return this;
+        }
+
+        public NTweener UnScaledTime(bool value = true)
+        {
+            m_unscaledTime = value;
+
+            return this;
+        }
+
+        public NTweener AddTimeCurve(AnimationCurve timeCurve)
+        {
+            m_timeConversion = (t) => timeCurve.Evaluate(t);
+
+            return this;
+        }
+
+        public NTweener AddTimeConversionMethod(Func<float, float> call)
+        {
+            m_timeConversion = call;
+
+            return this;
+        }
+
+        public NTweener WaitBeforeStart(float timeToWait)
+        {
+            m_waitingTimeBeforeStart = timeToWait;
+
+            return this;
+        }
+
+        #endregion
+
+        #region Commands Extensions
+
+        public NTweener Pause() => Pause(m_running);
+
+        #endregion
+
+        #region Update Actions
+
+        private void TweenPreUpdate(float deltaTime)
+        {
+            m_time += deltaTime;
+
+            //Finished waiting time.
+            if (m_time <= m_waitingTimeBeforeStart) return;
+
+            m_updateAction = TweenUpdate;
+            m_time -= m_waitingTimeBeforeStart;
+
+            m_updateAction(0f);
+        }
+
+        private void TweenUpdate(float deltaTime)
+        {
+            //Time conversion
+            m_time += deltaTime;
             try
             {
-                if (tweenMethod()) CompleteTween();
+                m_tValue = m_timeConversion(m_remapFunc(m_time));
             }
             catch
             {
-                Stop(false);
+                NTweenerCore.UnRegisterError(this, $"Time Conversion Method not valid.");
             }
 
-            return true;
+            //Execution
+            if (m_time >= m_duration)
+            {
+                OnCompleteTime();
+                return;
+            }
+
+            try
+            {
+                m_call(m_tValue);
+            }
+            catch
+            {
+                NTweenerCore.UnRegisterError(this, $"Cannot call tween.");
+            }
         }
 
-        private void CompleteTween()
+        #endregion
+
+        #region Privates Methods
+
+        private void OnCompleteTime()
         {
-            if (loop)
+            if (m_pingpong && m_isPing)
             {
-                tweenTime = 0f;
+                m_time = 0f;
+                m_isPing = !m_isPing;
+                m_remapFunc = m_isPing ? PingRemap : PongRemap;
+                return;
+            }
+
+            if (m_loop)
+            {
+                m_time = 0f;
+                m_isPing = true;
+                m_remapFunc = PingRemap;
                 return;
             }
 
             Stop(true);
         }
 
-        #region Orders
-
-        /// <summary>Stop tweening.</summary>
-        public void Stop(bool _callCompleteCallback)
-        {
-            if (_callCompleteCallback && callback != null) callback();
-            NTweenerUpdater.instance.UnRegisterTweener(this);
-        }
-
-        /// <summary>Pause tweening.</summary>
-        public void Pause() => paused = true;
-
-        /// <summary>Resume tweening.</summary>
-        public void Resume() => paused = false;
-
-        /// <summary>Set tweening pause to.</summary>
-        public void SetPause(bool _value) => paused = _value;
-
-        /// <summary>Inverse tweening pause value (True if false for exemple).</summary>
-        public void InversePause() => paused = !paused;
-
-        /// <summary>Start tweening.</summary>
-        public NTweener StartTween()
-        {
-            StartSequenceTween();
-
-            NTweenerUpdater.instance.RegisterTweener(this);
-
-            return this;
-        }
-
-        public void StartSequenceTween()
-        {
-            tweenTime = 0f;
-            tweenMethod = pingpong ? () => MainTweenPingPong() : () => MainTween(false);
-
-            if (onStartCallBack != null) onStartCallBack();
-        }
+        private float PingRemap(float time) => Mathf.InverseLerp(0f, m_duration, time);
+        private float PongRemap(float time) => Mathf.InverseLerp(m_duration, 0f, time);
 
         #endregion
 
-        #region Settings
-
-        public NTweener PingPong()
-        {
-            pingpong = true;
-            return this;
-        }
-
-        public NTweener Loop()
-        {
-            loop = true;
-            return this;
-        }
-
-        public NTweener UnscaledTime()
-        {
-            unscaledTime = true;
-            return this;
-        }
-
-        public NTweener OnComplete(Action _callback)
-        {
-            callback += _callback;
-            return this;
-        }
-
-        public NTweener AddTimeCurve(AnimationCurve _curve)
-        {
-            timeConversionMethod = (_t) => _curve.Evaluate(_t);
-            return this;
-        }
-
-        public NTweener AddTimeConversionMethod(Func<float, float> _callback)
-        {
-            timeConversionMethod = _callback;
-            return this;
-        }
-
-        public NTweener WaitBeforeStart(float _value)
-        {
-            startWaitingDuration = _value;
-            return this;
-        }
-
-        public NTweener OnStart(Action _callback)
-        {
-            onStartCallBack += _callback;
-            return this;
-        }
-
-        public NTweener Infinite()
-        {
-            duration = float.MaxValue;
-            return this;
-        }
-
-        public NTweener StopCondition(Func<bool> _condition)
-        {
-            stopCondition = _condition;
-            return this;
-        }
-        #endregion
+        public bool UnscaledTime => m_unscaledTime;
+        public bool Dead => m_dead;
+        public bool Running => m_running;
     }
 }

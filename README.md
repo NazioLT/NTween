@@ -1,4 +1,4 @@
-# NTween 1.2.0
+# NTween 2.0.0
 
 NTween is a Unity package created by [Henno Théo](https://github.com/NazioLT) wich contains some tweening class and methods for Unity3D.
 
