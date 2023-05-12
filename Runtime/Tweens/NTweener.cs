@@ -8,7 +8,7 @@ namespace Nazio_LT.Tools.NTween
     /// The class contains various methods and properties that allow for customization of the tween, such as setting the duration, loop settings, 
     /// and callbacks for when the tween starts or completes.
     /// </summary>
-    public class NTweener
+    public class NTweener : NTweenBase<NTweener>
     {
         public NTweener(Action<float> call, float duration)
         {
@@ -20,20 +20,15 @@ namespace Nazio_LT.Tools.NTween
         }
 
         //Tween settings
-        private bool m_unscaledTime = false;
         private bool m_loop = false;
         private bool m_pingpong = false;
         private float m_waitingTimeBeforeStart = 0f;
-        private Action m_onStart = () => { };
-        private Action m_onComplete = () => { };
         private Func<float, float> m_timeConversion = (t) => t;
 
         //Tween main parameters
         private float m_time = 0f;
         private float m_tValue = 0f;
-        private bool m_dead = false;
-        private bool m_running = false;
-
+        private bool m_registered = false;
         private bool m_isPing = true;
         private Func<float, float> m_remapFunc = null;
         private Action<float> m_updateAction = null;
@@ -41,7 +36,7 @@ namespace Nazio_LT.Tools.NTween
         private readonly Action<float> m_call = null;
         private readonly float m_duration = 0f;
 
-        internal void Update(float deltaTime)
+        protected override void Update(float deltaTime)
         {
             if (!m_running) return;
 
@@ -53,7 +48,7 @@ namespace Nazio_LT.Tools.NTween
         /// <summary>
         /// This function starts a tween animation.
         /// </summary>
-        public NTweener StartTween()
+        public NTweener StartTween(bool register = true)
         {
             if (m_running)
             {
@@ -61,7 +56,12 @@ namespace Nazio_LT.Tools.NTween
                 return this;
             }
 
-            NTweenerUpdater.instance.RegisterTweener(this);
+            if (register)
+            {
+                NTweenerUpdater.instance.RegisterTweener(this);
+                m_registered = true;
+            }
+
             m_dead = false;
             m_running = true;
 
@@ -85,7 +85,11 @@ namespace Nazio_LT.Tools.NTween
                 return this;
             }
 
-            NTweenerUpdater.instance.UnRegisterTweener(this);
+            if (m_registered)
+            {
+                NTweenerUpdater.instance.UnRegisterTweener(this);
+                m_registered = false;
+            }
             m_dead = true;
             m_running = false;
 
@@ -94,13 +98,6 @@ namespace Nazio_LT.Tools.NTween
                 m_call(m_isPing ? 1 : 0);
                 m_onComplete();
             }
-
-            return this;
-        }
-
-        public NTweener Pause(bool value)
-        {
-            m_running = !value;
 
             return this;
         }
@@ -115,27 +112,6 @@ namespace Nazio_LT.Tools.NTween
         public NTweener Loop(bool value = true)
         {
             m_loop = value;
-
-            return this;
-        }
-
-        public NTweener OnComplete(System.Action call)
-        {
-            m_onComplete = call;
-
-            return this;
-        }
-
-        public NTweener OnStart(System.Action call)
-        {
-            m_onStart = call;
-
-            return this;
-        }
-
-        public NTweener UnScaledTime(bool value = true)
-        {
-            m_unscaledTime = value;
 
             return this;
         }
@@ -160,12 +136,6 @@ namespace Nazio_LT.Tools.NTween
 
             return this;
         }
-
-        #endregion
-
-        #region Commands Extensions
-
-        public NTweener Pause() => Pause(m_running);
 
         #endregion
 
@@ -243,9 +213,5 @@ namespace Nazio_LT.Tools.NTween
         private float PongRemap(float time) => Mathf.InverseLerp(m_duration, 0f, time);
 
         #endregion
-
-        public bool UnscaledTime => m_unscaledTime;
-        public bool Dead => m_dead;
-        public bool Running => m_running;
     }
 }
