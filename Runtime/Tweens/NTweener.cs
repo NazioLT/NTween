@@ -77,7 +77,7 @@ namespace Nazio_LT.Tools.NTween
         /// </summary>
         /// <param name="endCall">The endCall parameter is a boolean value that determines whether or
         /// not to call the OnComplete event when stopping the NTweener..</param>
-        public NTweener Stop(bool endCall = false)
+        public override NTweener Stop(bool endCall = false)
         {
             if (m_dead)
             {

@@ -9,13 +9,44 @@ namespace Nazio_LT.Tools.NTween
         private ITweenable m_currentTween = null;
         private int m_currentTweenID = 0;
 
-        public void Add(NTweener tweener)
+        #region Public Commands
+
+        public override NTweenSequence Stop(bool endCall = false)
+        {
+            if (m_dead)
+            {
+                NTweenerCore.Error($"TweenSequence is already stopped.");
+                return this;
+            }
+
+            m_running = false;
+            m_dead = true;
+
+            if(endCall) m_onComplete();
+
+            NTweenerUpdater.instance.UnRegisterTweener(this);
+
+            return this;
+        }
+
+        public NTweenSequence Add(NTweener tweener)
         {
             m_sequence.Add(tweener);
+
+            return this;
         }
 
         public NTweenSequence StartTween()
         {
+            if (m_running)
+            {
+                NTweenerCore.Error($"TweenSequence is already running.");
+                return this;
+            }
+
+            m_running = true;
+            m_dead = false;
+
             m_currentTweenID = 0;
             AssignCurrentTween();
 
@@ -26,8 +57,14 @@ namespace Nazio_LT.Tools.NTween
             return this;
         }
 
+        #endregion
+
         protected override void Update(float deltaTime)
         {
+            if(!m_running) return;
+
+            if(m_dead) Stop();
+
             if (m_currentTween == null)
             {
                 Next();

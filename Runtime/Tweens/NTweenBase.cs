@@ -22,6 +22,10 @@ namespace Nazio_LT.Tools.NTween
         protected Action m_onStart = () => { };
         protected Action m_onComplete = () => { };
 
+        #region Public Commands
+
+        public abstract T Stop(bool endCall = false);
+
         public T OnComplete(System.Action call)
         {
             m_onComplete = call;
@@ -49,6 +53,8 @@ namespace Nazio_LT.Tools.NTween
 
             return (T)this;
         }
+
+        #endregion
 
         #region Commands Extensions
 
