@@ -14,10 +14,10 @@ namespace Nazio_LT.Tools.NTween
 #if UNITY_EDITOR
             if (!UnityEditor.EditorApplication.isPlaying) return;
 #endif
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = (new GameObject("NTweener")).AddComponent<NTweenerUpdater>();
-                DontDestroyOnLoad(instance.gameObject);
+                (new GameObject("NTweener")).AddComponent<NTweenerUpdater>();
+                DontDestroyOnLoad(Instance.gameObject);
             }
         }
 

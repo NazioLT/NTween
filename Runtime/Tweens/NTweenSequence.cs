@@ -35,7 +35,7 @@ namespace Nazio_LT.Tools.NTween
 
             if (endCall) m_onComplete();
 
-            NTweenerUpdater.instance.UnRegisterTweener(this);
+            NTweenerUpdater.Instance.UnRegisterTweener(this);
 
             return this;
         }
@@ -74,7 +74,7 @@ namespace Nazio_LT.Tools.NTween
                     break;
             }
 
-            NTweenerUpdater.instance.RegisterTweener(this);
+            NTweenerUpdater.Instance.RegisterTweener(this);
 
             m_onStart();
 
@@ -136,7 +136,7 @@ namespace Nazio_LT.Tools.NTween
 
             if (m_currentTweenID >= m_sequence.Count)
             {
-                NTweenerUpdater.instance.UnRegisterTweener(this);
+                NTweenerUpdater.Instance.UnRegisterTweener(this);
                 return;
             }
 

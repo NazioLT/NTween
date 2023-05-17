@@ -9,7 +9,7 @@ namespace Nazio_LT.Tools.NTween
         internal static void Error(string error) => Debug.Log($"[{NTWEENER_NAME}] : {error}");
         internal static void UnRegisterError(NTweener tweener, string error)
         {
-            NTweenerUpdater.instance.UnRegisterTweener(tweener);
+            NTweenerUpdater.Instance.UnRegisterTweener(tweener);
             Error($"Cannot call tween.");
         }
     }

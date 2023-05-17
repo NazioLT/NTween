@@ -60,7 +60,7 @@ namespace Nazio_LT.Tools.NTween
 
             if (register)
             {
-                NTweenerUpdater.instance.RegisterTweener(this);
+                NTweenerUpdater.Instance.RegisterTweener(this);
                 m_registered = true;
             }
 
@@ -89,7 +89,7 @@ namespace Nazio_LT.Tools.NTween
 
             if (m_registered)
             {
-                NTweenerUpdater.instance.UnRegisterTweener(this);
+                NTweenerUpdater.Instance.UnRegisterTweener(this);
                 m_registered = false;
             }
             m_dead = true;
