@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Nazio_LT.Tools.Core;
 
-namespace Nazio_LT.Tools.NTween.Internal
+namespace Nazio_LT.Tools.NTween
 {
     public sealed class NTweenerUpdater : Singleton<NTweenerUpdater>
     {
-        private List<NTweener> tweenersToUpdate = new List<NTweener>();
+        private List<ITweenable> m_tweenersToUpdate = new List<ITweenable>();
+        private List<ITweenable> m_tweenersToFixedUpdate = new List<ITweenable>();
 
         [RuntimeInitializeOnLoadMethod]
         private static void Init()
@@ -14,39 +15,45 @@ namespace Nazio_LT.Tools.NTween.Internal
 #if UNITY_EDITOR
             if (!UnityEditor.EditorApplication.isPlaying) return;
 #endif
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = (new GameObject("NTweener")).AddComponent<NTweenerUpdater>();
-                DontDestroyOnLoad(instance.gameObject);
+                NTweenerUpdater instance = (new GameObject("NTweener")).AddComponent<NTweenerUpdater>();
+                DontDestroyOnLoad(Instance.gameObject);
+                instance.SetInstance(instance);
             }
         }
 
         private void Update()
         {
-            TryUpdate(ref tweenersToUpdate, Time.unscaledDeltaTime);
+            if (Time.frameCount > 1) TryUpdate(ref m_tweenersToUpdate, Time.unscaledDeltaTime);
         }
 
-        private void TryUpdate(ref List<NTweener> _tweenersToUpdate, float _unscaledDeltaTime)
+        private void FixedUpdate()
         {
-            if (_tweenersToUpdate == null || _tweenersToUpdate.Count <= 0) return;
+            if (Time.frameCount > 1) TryUpdate(ref m_tweenersToFixedUpdate, Time.fixedUnscaledDeltaTime);
+        }
 
-            for (int i = 0; i < _tweenersToUpdate.Count; i++)
+        private void TryUpdate(ref List<ITweenable> tweenersToUpdate, float unscaledDeltaTime)
+        {
+            if (tweenersToUpdate == null || tweenersToUpdate.Count <= 0) return;
+
+            for (int i = 0; i < tweenersToUpdate.Count; i++)
             {
-                NTweener _tweener = _tweenersToUpdate[i];
+                ITweenable tweener = tweenersToUpdate[i];
 
-                if (_tweener == null)
+                if (tweener == null || tweener.Dead)
                 {
-                    _tweenersToUpdate.RemoveAt(i);
+                    tweenersToUpdate.RemoveAt(i);
                     continue;
                 }
 
-                float _deltaTime = _unscaledDeltaTime * (_tweener.unscaledTime ? 1f : Time.timeScale);
+                float deltaTime = unscaledDeltaTime * (tweener.UnscaledTime ? 1f : Time.timeScale);
 
-                _tweener.Update(_deltaTime);
+                tweener.Update(deltaTime);
             }
         }
 
-        public void RegisterTweener(NTweener _tweener) => tweenersToUpdate.Add(_tweener);
-        public void UnRegisterTweener(NTweener _tweener) => tweenersToUpdate.Remove(_tweener);
+        internal void RegisterTweener(ITweenable tweener) => (tweener.IsInFixedUpdate ? m_tweenersToFixedUpdate : m_tweenersToUpdate).Add(tweener);
+        internal void UnRegisterTweener(ITweenable tweener) => (tweener.IsInFixedUpdate ? m_tweenersToFixedUpdate : m_tweenersToUpdate).Remove(tweener);
     }
 }

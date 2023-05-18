@@ -1,3 +1,13 @@
+## [2.0.0](https://github.com/NazioLT/NTween) (2023-02-12)
+
+### Total Code Refacto
+
+### New Features : 
+
+* Sequencer Modes : Parallel and Sequencial. ([43ae74a1](https://github.com/NazioLT/NTween/pull/5/commits/43ae74a17336dd97b0a9efbc4821387530c938d1))
+* NTweener Handler. ([7b11eaa](https://github.com/NazioLT/NTween/pull/5/commits/7b11eaa7d62aec8c6b2056e61ca0cf36506cf923))
+* Kill Condition. ([542f840](https://github.com/NazioLT/NTween/pull/5/commits/542f84050aa349c32805af8ef32659bae31444ca))
+
 ## [1.2.0](https://github.com/NazioLT/NTween) (2023-02-12)
 
 ### New Features :
@@ -15,11 +25,6 @@
 
 * On start method. ([571c455](https://github.com/NazioLT/NTween/commit/571c455678d144676e71c4e44f6220b0c509457c))
 * Waiting tweening. ([f5ec008](https://github.com/NazioLT/NTween/commit/f5ec008bcd69bea3f4d61cb9d407acfc3f0da4e3s))
-<<<<<<< HEAD
-=======
-
->>>>>>> 882cc6ec398c4db0706e6a7d2f767378facde4f2
-
 
 ## [1.0.0](https://github.com/NazioLT/NTween/releases/tag/1.0.0) (2022-10-11)
 

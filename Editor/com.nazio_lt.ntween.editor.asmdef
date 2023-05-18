@@ -1,8 +1,9 @@
 {
-    "name": "com.nazio_lt.ntween",
-    "rootNamespace": "Nazio_LT.Tools.NTween",
+    "name": "com.nazio_lt.ntween.editor",
+    "rootNamespace": "Nazio_LT.Tools.NTween.Editor",
     "references": [
-        "GUID:a99df13097c3db843bfa5021ba44cefc"
+        "GUID:7bb7d4c4e3e68494dad542d50c3e5335",
+        "GUID:949158234dfeb184e9dee97af1142ee4"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
