@@ -118,7 +118,7 @@ namespace Nazio_LT.Tools.NTween
             return this;
         }
 
-        public NTweener AddTimeCurve(AnimationCurve timeCurve)
+        public NTweener AddAnimationCurve(AnimationCurve timeCurve)
         {
             m_timeConversion = (t) => timeCurve.Evaluate(t);
 

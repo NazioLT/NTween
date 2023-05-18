@@ -7,6 +7,7 @@ namespace Nazio_LT.Tools.NTween
     public sealed class NTweenerUpdater : Singleton<NTweenerUpdater>
     {
         private List<ITweenable> m_tweenersToUpdate = new List<ITweenable>();
+        private List<ITweenable> m_tweenersToFixedUpdate = new List<ITweenable>();
 
         [RuntimeInitializeOnLoadMethod]
         private static void Init()
@@ -24,7 +25,12 @@ namespace Nazio_LT.Tools.NTween
 
         private void Update()
         {
-            if(Time.frameCount > 1) TryUpdate(ref m_tweenersToUpdate, Time.unscaledDeltaTime);
+            if (Time.frameCount > 1) TryUpdate(ref m_tweenersToUpdate, Time.unscaledDeltaTime);
+        }
+
+        private void FixedUpdate()
+        {
+            if (Time.frameCount > 1) TryUpdate(ref m_tweenersToFixedUpdate, Time.fixedUnscaledDeltaTime);
         }
 
         private void TryUpdate(ref List<ITweenable> tweenersToUpdate, float unscaledDeltaTime)
@@ -47,7 +53,7 @@ namespace Nazio_LT.Tools.NTween
             }
         }
 
-        internal void RegisterTweener(ITweenable tweener) => m_tweenersToUpdate.Add(tweener);
-        internal void UnRegisterTweener(ITweenable tweener) => m_tweenersToUpdate.Remove(tweener);
+        internal void RegisterTweener(ITweenable tweener) => (tweener.IsInFixedUpdate ? m_tweenersToFixedUpdate : m_tweenersToUpdate).Add(tweener);
+        internal void UnRegisterTweener(ITweenable tweener) => (tweener.IsInFixedUpdate ? m_tweenersToFixedUpdate : m_tweenersToUpdate).Remove(tweener);
     }
 }

@@ -6,5 +6,6 @@ namespace Nazio_LT.Tools.NTween
 
         bool UnscaledTime { get; }
         bool Dead { get; }
+        bool IsInFixedUpdate { get; }
     }
 }

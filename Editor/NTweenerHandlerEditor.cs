@@ -11,9 +11,9 @@ namespace Nazio_LT.Tools.NTween.Editor
         private SerializedProperty m_open_prop;
 
         private SerializedProperty m_type_prop;
-        private SerializedProperty m_transform_prop, m_target_prop, m_delta_prop, m_duration_prop;
+        private SerializedProperty m_objectType_prop, m_transform_prop, m_rigidbody_prop, m_rigidbody2D_prop, m_target_prop, m_delta_prop, m_duration_prop;
         private SerializedProperty m_otherPropsOpen_prop;
-        private SerializedProperty m_loop_prop, m_pingpong_prop;
+        private SerializedProperty m_loop_prop, m_pingpong_prop, m_hasAnimationCurve_prop, m_curve_prop;
 
         private SerializedProperty[] m_persistantsProps;
         private SerializedProperty[] m_otherProps;
@@ -32,7 +32,10 @@ namespace Nazio_LT.Tools.NTween.Editor
 
             m_type_prop = property.FindPropertyRelative("m_type");
 
+            m_objectType_prop = property.FindPropertyRelative("m_objectType");
             m_transform_prop = property.FindPropertyRelative("m_transform");
+            m_rigidbody_prop = property.FindPropertyRelative("m_rigidbody");
+            m_rigidbody2D_prop = property.FindPropertyRelative("m_rigidbody2D");
             m_target_prop = property.FindPropertyRelative("m_target");
             m_delta_prop = property.FindPropertyRelative("m_delta");
             m_duration_prop = property.FindPropertyRelative("m_duration");
@@ -40,6 +43,8 @@ namespace Nazio_LT.Tools.NTween.Editor
             m_otherPropsOpen_prop = property.FindPropertyRelative("m_otherPropsOpen");
             m_loop_prop = property.FindPropertyRelative("m_loop");
             m_pingpong_prop = property.FindPropertyRelative("m_pingpong");
+            m_hasAnimationCurve_prop = property.FindPropertyRelative("m_hasAnimationCurve");
+            m_curve_prop = property.FindPropertyRelative("m_curve");
 
             DefinePropGroups();
         }
@@ -67,10 +72,16 @@ namespace Nazio_LT.Tools.NTween.Editor
             m_otherPropsOpen_prop.boolValue = EditorGUI.Foldout(baseRect, m_otherPropsOpen_prop.boolValue, "Other properties");
             NEditor.AdaptGUILine(ref baseRect, ref propertyHeight, 1);
 
-            if(!m_otherPropsOpen_prop.boolValue) return;
+            if (!m_otherPropsOpen_prop.boolValue) return;
 
             NEditor.DrawMultipleGUIClassic(baseRect, NEditor.SINGLE_LINE, m_otherProps);
             NEditor.AdaptGUILine(ref baseRect, ref propertyHeight, m_otherProps.Length);
+
+            if (m_hasAnimationCurve_prop.boolValue)
+            {
+                EditorGUI.PropertyField(baseRect, m_curve_prop);
+                NEditor.AdaptGUILine(ref baseRect, ref propertyHeight);
+            }
         }
 
         private SerializedProperty[] NTweenTypeFactory(NTweenType selectedType)
@@ -105,33 +116,46 @@ namespace Nazio_LT.Tools.NTween.Editor
 
             m_otherProps = new SerializedProperty[]
             {
-                m_loop_prop, m_pingpong_prop
+                m_loop_prop, m_pingpong_prop, m_hasAnimationCurve_prop
             };
 
             m_ntMoveToProps = new SerializedProperty[]
             {
-                m_transform_prop, m_target_prop
+                m_objectType_prop, GetObjectType(), m_target_prop
             };
 
             m_ntMoveProps = new SerializedProperty[]
             {
-                m_transform_prop, m_delta_prop
+                m_objectType_prop, GetObjectType(), m_delta_prop
             };
 
             m_ntRotateToProps = new SerializedProperty[]
             {
-                m_transform_prop, m_target_prop
+                m_objectType_prop, GetObjectType(), m_target_prop
             };
 
             m_ntRotateProps = new SerializedProperty[]
             {
-                m_transform_prop, m_delta_prop
+                m_objectType_prop, GetObjectType(), m_delta_prop
             };
 
             m_ntScaleToProps = new SerializedProperty[]
             {
-                m_transform_prop, m_target_prop
+                m_objectType_prop, GetObjectType(), m_target_prop
             };
+        }
+
+        private SerializedProperty GetObjectType()
+        {
+            ObjectType type = (ObjectType)m_objectType_prop.intValue;
+            switch (type)
+            {
+                case ObjectType.Transform : return m_transform_prop;
+                case ObjectType.Rigidbody : return m_rigidbody_prop;
+                case ObjectType.Rigidbody2D : return m_rigidbody2D_prop;
+            }
+
+            return null;
         }
     }
 }

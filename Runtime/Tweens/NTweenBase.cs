@@ -6,6 +6,7 @@ namespace Nazio_LT.Tools.NTween
     {
         //Tween settings
         private bool m_unscaledTime = false;
+        private bool m_fixedUpdate = false;
 
         //Tween main parameters
         protected bool m_dead = false;
@@ -46,6 +47,13 @@ namespace Nazio_LT.Tools.NTween
             return (T)this;
         }
 
+        public T FixedUpdate(bool value = true)
+        {
+            m_fixedUpdate = value;
+
+            return (T)this;
+        }
+
         #endregion
 
         #region Commands Extensions
@@ -60,5 +68,6 @@ namespace Nazio_LT.Tools.NTween
         public bool UnscaledTime => m_unscaledTime;
         public bool Dead => m_dead;
         public bool Running => m_running;
+        public bool IsInFixedUpdate => m_fixedUpdate;
     }
 }
