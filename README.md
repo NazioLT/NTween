@@ -4,13 +4,14 @@ NTween is a Unity package created by [Henno Théo](https://github.com/NazioLT) w
 
 ## Dependencies : 
 
-* [[NZCore 1.2.2](https://github.com/NazioLT/NZCore)]
+* [[NZCore 1.2.6](https://github.com/NazioLT/NZCore)]
 
 ## Content :
 
 * Pre-coded tweening methods
 * Customisable tweeners
 * Sequencer
+* NTweener Handler
 
 ## Documentation :
 
