@@ -1,4 +1,4 @@
-## [2.0.0](https://github.com/NazioLT/NTween) (2023-02-12)
+## [2.0.0](https://github.com/NazioLT/NTween) (2023-05-18)
 
 ### Total Code Refacto
 
@@ -8,7 +8,7 @@
 * NTweener Handler. ([7b11eaa](https://github.com/NazioLT/NTween/pull/5/commits/7b11eaa7d62aec8c6b2056e61ca0cf36506cf923))
 * Kill Condition. ([542f840](https://github.com/NazioLT/NTween/pull/5/commits/542f84050aa349c32805af8ef32659bae31444ca))
 
-## [1.2.0](https://github.com/NazioLT/NTween) (2023-02-12)
+## [1.2.0](https://github.com/NazioLT/NTween/releases/tag/NTween-1.2.0) (2023-02-12)
 
 ### New Features :
 
