@@ -118,5 +118,73 @@ namespace Nazio_LT.Tools.NTween
         }
 
         #endregion
+
+        #region Material Set Values
+
+        public static NTweener NTMatSetFloat(Material material, string name, float minValue, float maxValue, float duration)
+        {
+            return NTBuild((t) =>
+            {
+                material.SetFloat(name, Mathf.LerpUnclamped(minValue, maxValue, t));
+            }, duration);
+        }
+
+        public static NTweener NTMatSetVector(Material material, string name, Vector2 minValue, Vector2 maxValue, float duration)
+        {
+            return NTBuild((t) =>
+            {
+                material.SetVector(name, Vector2.LerpUnclamped(minValue, maxValue, t));
+            }, duration);
+        }
+
+        public static NTweener NTMatSetVector(Material material, string name, Vector3 minValue, Vector3 maxValue, float duration)
+        {
+            return NTBuild((t) =>
+            {
+                material.SetVector(name, Vector3.LerpUnclamped(minValue, maxValue, t));
+            }, duration);
+        }
+
+        public static NTweener NTMatSetColor(Material material, string name, Color minValue, Color maxValue, float duration)
+        {
+            return NTBuild((t) =>
+            {
+                material.SetColor(name, Color.LerpUnclamped(minValue, maxValue, t));
+            }, duration);
+        }
+
+        #endregion
+
+        #region Material Set Values
+
+        public static NTweener NTMatSetFloatTo(Material material, string name, float targetValue, float duration)
+        {
+            float originColor = material.GetFloat(name);
+
+            return NTMatSetFloat(material, name, originColor, targetValue, duration);
+        }
+
+        public static NTweener NTMatSetVectorTo(Material material, string name, Vector2 targetValue, float duration)
+        {
+            Vector2 originColor = material.GetVector(name);
+
+            return NTMatSetVector(material, name, originColor, targetValue, duration);
+        }
+
+        public static NTweener NTMatSetVectorTo(Material material, string name, Vector3 targetValue, float duration)
+        {
+            Vector3 originColor = material.GetVector(name);
+
+            return NTMatSetVector(material, name, originColor, targetValue, duration);
+        }
+
+        public static NTweener NTMatSetColorTo(Material material, string name, Color targetValue, float duration)
+        {
+            Color originColor = material.GetColor(name);
+
+            return NTMatSetColor(material, name, originColor, targetValue, duration);
+        }
+
+        #endregion
     }
 }

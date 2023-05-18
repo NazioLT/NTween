@@ -40,7 +40,7 @@ namespace Nazio_LT.Tools.NTween
         {
             if (!m_running) return;
 
-            if(m_dead) Stop();
+            if (m_dead) Stop();
 
             m_updateAction(deltaTime);
         }

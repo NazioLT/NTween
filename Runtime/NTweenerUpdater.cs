@@ -16,14 +16,15 @@ namespace Nazio_LT.Tools.NTween
 #endif
             if (Instance == null)
             {
-                (new GameObject("NTweener")).AddComponent<NTweenerUpdater>();
+                NTweenerUpdater instance = (new GameObject("NTweener")).AddComponent<NTweenerUpdater>();
                 DontDestroyOnLoad(Instance.gameObject);
+                instance.SetInstance(instance);
             }
         }
 
         private void Update()
         {
-            TryUpdate(ref m_tweenersToUpdate, Time.unscaledDeltaTime);
+            if(Time.frameCount > 1) TryUpdate(ref m_tweenersToUpdate, Time.unscaledDeltaTime);
         }
 
         private void TryUpdate(ref List<ITweenable> tweenersToUpdate, float unscaledDeltaTime)

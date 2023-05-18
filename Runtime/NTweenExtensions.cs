@@ -45,5 +45,29 @@ namespace Nazio_LT.Tools.NTween
         public static NTweener NTScaleTo(this Transform transform, Vector3 target, float duration) => NTween.NTScaleTo(transform, target, duration);
 
         #endregion
+
+        #region Material Set Values
+
+        public static NTweener NTMatSetFloat(this Material material, string name, float minValue, float maxValue, float duration) => NTween.NTMatSetFloat(material, name, minValue, maxValue, duration);
+
+        public static NTweener NTMatSetVector(this Material material, string name, Vector2 minValue, Vector2 maxValue, float duration) => NTween.NTMatSetVector(material, name, minValue, maxValue, duration);
+
+        public static NTweener NTMatSetVector(this Material material, string name, Vector3 minValue, Vector3 maxValue, float duration) => NTween.NTMatSetVector(material, name, minValue, maxValue, duration);
+
+        public static NTweener NTMatSetColor(this Material material, string name, Color minValue, Color maxValue, float duration) => NTween.NTMatSetColor(material, name, minValue, maxValue, duration);
+
+        #endregion
+
+        #region Material Set Values To
+
+        public static NTweener NTMatSetFloatTo(this Material material, string name, float targetValue, float duration) => NTween.NTMatSetFloatTo(material, name, targetValue, duration);
+
+        public static NTweener NTMatSetVectorTo(this Material material, string name, Vector2 targetValue, float duration) => NTween.NTMatSetVectorTo(material, name, targetValue, duration);
+
+        public static NTweener NTMatSetVectorTo(this Material material, string name, Vector3 targetValue, float duration) => NTween.NTMatSetVectorTo(material, name, targetValue, duration);
+
+        public static NTweener NTMatSetColorTo(this Material material, string name, Color targetValue, float duration) => NTween.NTMatSetColorTo(material, name, targetValue, duration);
+
+        #endregion
     }
 }
