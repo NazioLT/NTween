@@ -32,6 +32,7 @@ namespace Nazio_LT.Tools.NTween
 
             m_running = false;
             m_dead = true;
+            m_onDie();
 
             if (endCall) m_onComplete();
 

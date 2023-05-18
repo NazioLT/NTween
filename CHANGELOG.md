@@ -5,6 +5,7 @@
 ### New Features : 
 
 * Sequencer Modes : Parallel and Sequencial. ([43ae74a1](https://github.com/NazioLT/NTween/pull/5/commits/43ae74a17336dd97b0a9efbc4821387530c938d1))
+* NTweener Handler. ([7b11eaa](https://github.com/NazioLT/NTween/pull/5/commits/7b11eaa7d62aec8c6b2056e61ca0cf36506cf923))
 
 ## [1.2.0](https://github.com/NazioLT/NTween) (2023-02-12)
 

@@ -32,6 +32,7 @@ namespace Nazio_LT.Tools.NTween
         private bool m_isPing = true;
         private Func<float, float> m_remapFunc = null;
         private Action<float> m_updateAction = null;
+        private Func<bool> m_stopCondition = null;
 
         private readonly Action<float> m_call = null;
         private readonly float m_duration = 0f;
@@ -40,7 +41,11 @@ namespace Nazio_LT.Tools.NTween
         {
             if (!m_running) return;
 
-            if (m_dead) Stop();
+            if (m_dead || (m_stopCondition != null && m_stopCondition()))
+            {
+                Stop();
+                return;
+            }
 
             m_updateAction(deltaTime);
         }
@@ -93,6 +98,7 @@ namespace Nazio_LT.Tools.NTween
                 m_registered = false;
             }
             m_dead = true;
+            m_onDie();
             m_running = false;
 
             if (endCall)
@@ -135,6 +141,13 @@ namespace Nazio_LT.Tools.NTween
         public NTweener WaitBeforeStart(float timeToWait)
         {
             m_waitingTimeBeforeStart = timeToWait;
+
+            return this;
+        }
+
+        public NTweener AddKillCondition(Func<bool> condition)
+        {
+            m_stopCondition = condition;
 
             return this;
         }

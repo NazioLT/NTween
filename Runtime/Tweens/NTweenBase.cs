@@ -14,6 +14,7 @@ namespace Nazio_LT.Tools.NTween
 
         protected Action m_onStart = () => { };
         protected Action m_onComplete = () => { };
+        protected Action m_onDie = () => { };
 
         #region Public Commands
 
@@ -50,6 +51,13 @@ namespace Nazio_LT.Tools.NTween
         public T FixedUpdate(bool value = true)
         {
             m_fixedUpdate = value;
+
+            return (T)this;
+        }
+
+        public T OnDie(Action call)
+        {
+            m_onDie = call;
 
             return (T)this;
         }
